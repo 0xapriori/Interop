@@ -1,345 +1,322 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Great Unification: Crypto Interoperability Report 2025</title>
+    <style>
+        /* CSS Variables for Minimalist Aesthetic */
+        :root {
+            --bg-color: #FFFFF0; /* Ivory Background */
+            --text-color: #1a1a1a; /* Soft Black */
+            --accent-color: #333333; /* Dark Grey for borders */
+            --link-color: #000000;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-serif: 'Georgia', serif;
+            --sidebar-width: 280px;
+        }
 
-export default function InteroperabilityReport() {
-  const [activeSection, setActiveSection] = useState('introduction');
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const contentRef = useRef(null);
+        /* Reset & Base Styles */
+        * { box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
 
-  const bridgeVolumeData = [
-    { name: 'Stargate', volume: 48.23 },
-    { name: 'Ethereum', volume: 38.0 },
-    { name: 'Wormhole', volume: 35.0 },
-    { name: 'Solana', volume: 10.1 },
-    { name: 'DLN', volume: 8.5 },
-  ];
+        /* Layout Container */
+       .container {
+            display: flex;
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
 
-  const tvlData = [
-    { name: 'Stargate V2', tvl: 206.82 },
-    { name: 'Stargate V1', tvl: 26.56 },
-    { name: 'Synapse', tvl: 23.36 },
-    { name: 'Maya', tvl: 14.33 },
-    { name: 'Symbiosis', tvl: 9.96 },
-    { name: 'Hop', tvl: 6.13 },
-    { name: 'Across', tvl: 3.51 },
-  ];
+        /* Main Content Column */
+        main {
+            flex: 1;
+            padding: 5rem 6rem 5rem 4rem;
+            max-width: 950px;
+        }
 
-  const stablecoinData = [
-    { name: 'Ethereum', value: 115, color: '#1a1a1a' },
-    { name: 'Solana', value: 11.7, color: '#4a4a4a' },
-    { name: 'BNB', value: 7, color: '#6a6a6a' },
-    { name: 'Base', value: 3.8, color: '#8a8a8a' },
-    { name: 'Arbitrum', value: 3.1, color: '#afafaf' },
-  ];
+        /* Typography */
+        h1 {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
 
-  const stargateTimeData = [
-    { month: 'Mar 22', volume: 2.0 },
-    { month: 'Jul 22', volume: 1.2 },
-    { month: 'Jan 23', volume: 0.8 },
-    { month: 'Jul 23', volume: 1.5 },
-    { month: 'Jan 24', volume: 2.5 },
-    { month: 'Jul 24', volume: 4.0 },
-    { month: 'Jan 25', volume: 3.2 },
-    { month: 'Jul 25', volume: 4.0 },
-    { month: 'Nov 25', volume: 3.8 },
-  ];
+       .subtitle {
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 2rem;
+        }
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (contentRef.current) {
-        const scrollTop = contentRef.current.scrollTop;
-        const scrollHeight = contentRef.current.scrollHeight - contentRef.current.clientHeight;
-        setScrollProgress((scrollTop / scrollHeight) * 100);
-      }
-    };
-    const content = contentRef.current;
-    if (content) {
-      content.addEventListener('scroll', handleScroll);
-      return () => content.removeEventListener('scroll', handleScroll);
-    }
-  }, []);
+        h2 {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-top: 4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 0.5rem;
+        }
 
-  const tocItems = [
-    { id: 'introduction', label: '1. Introduction' },
-    { id: 'fast-interop', label: '2. Fast Interoperability' },
-    { id: 'slow-interop', label: '3. Slow Interoperability' },
-    { id: 'data', label: '7. Market Data' },
-    { id: 'conclusion', label: '8. Conclusion' }
-  ];
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
 
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setActiveSection(id);
-    }
-  };
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-  const StatBox = ({ value, label }) => (
-    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-      <div className="text-2xl font-bold text-gray-900">{value}</div>
-      <div className="text-xs text-gray-600 mt-1">{label}</div>
-    </div>
-  );
+        p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            font-size: 1.05rem;
+        }
 
-  const DefinitionBox = ({ title, children }) => (
-    <div className="bg-yellow-50/50 border-l-4 border-gray-900 pl-6 py-4 my-6">
-      <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">{title}</div>
-      <div className="text-gray-700 leading-relaxed">{children}</div>
-    </div>
-  );
+        li {
+            margin-bottom: 0.5rem;
+        }
 
-  const CalloutBox = ({ children }) => (
-    <div className="bg-gradient-to-r from-yellow-50 to-transparent border-l-4 border-gray-800 pl-6 py-4 my-6">
-      <div className="text-gray-800 leading-relaxed font-medium">{children}</div>
-    </div>
-  );
+        /* Links */
+        a {
+            color: var(--link-color);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+        }
+        a:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+            text-decoration: none;
+        }
 
-  return (
-    <div className="min-h-screen flex bg-amber-50">
-      <div 
-        className="fixed top-0 left-0 h-1 bg-gray-900 z-50 transition-all duration-150"
-        style={{ width: `${scrollProgress}%` }}
-      />
+        /* Tables - Clean & Data Rich */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2.5rem 0;
+            font-size: 0.95rem;
+            border: 2px solid var(--text-color);
+        }
 
-      <nav className="w-56 fixed right-0 top-0 h-screen bg-amber-50 border-l border-yellow-200 p-5 overflow-y-auto hidden lg:block">
-        <div className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-4">Contents</div>
-        <ul className="space-y-3">
-          {tocItems.map(item => (
-            <li key={item.id}>
-              <button
-                onClick={() => scrollToSection(item.id)}
-                className={`text-sm text-left w-full hover:text-gray-900 transition-colors ${
-                  activeSection === item.id ? 'text-gray-900 font-medium' : 'text-gray-600'
-                }`}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+        th, td {
+            border: 1px solid var(--text-color);
+            padding: 15px;
+            text-align: left;
+            vertical-align: top;
+        }
 
-      <main ref={contentRef} className="flex-1 lg:mr-56 max-w-3xl mx-auto px-6 py-12 overflow-y-auto h-screen">
-        <header className="mb-16 pb-12 border-b-2 border-yellow-200">
-          <h1 className="text-4xl md:text-5xl font-serif font-semibold text-gray-900 leading-tight mb-4">
-            The Fragmented Ledger
-          </h1>
-          <p className="text-xl text-gray-600 italic mb-4">
-            A Comprehensive Analysis of the Crypto Interoperability Landscape
-          </p>
-          <div className="flex items-center gap-3 text-sm text-gray-500">
-            <span>November 2025</span>
-            <span className="text-yellow-400">•</span>
-            <span>35 min read</span>
-          </div>
+        th {
+            background-color: #f2f2e6; /* Slightly darker ivory */
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Sidebar / Table of Contents */
+        aside {
+            width: var(--sidebar-width);
+            padding: 5rem 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-left: 1px solid #e0e0d0;
+            background-color: var(--bg-color);
+        }
+
+       .toc-header {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li {
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: block;
+        }
+
+        nav a:hover, nav a.active {
+            color: #000;
+            font-weight: 600;
+            transform: translateX(5px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1100px) {
+           .container { flex-direction: column-reverse; }
+            main { padding: 3rem 2rem; max-width: 100%; }
+            aside { 
+                width: 100%; 
+                height: auto; 
+                position: relative; 
+                border-left: none; 
+                border-bottom: 1px solid #e0e0d0;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <main>
+        <header>
+            <h1>The Great Unification: Architectural Convergence in Cross-Chain Interoperability</h1>
+            <p class="subtitle">A Deep Research Report on Intent-Centric Systems, Hybrid Transport Protocols, and the Future of Settlement.</p>
         </header>
 
-        <section id="introduction" className="mb-16">
-          <h2 className="text-3xl font-serif font-semibold text-gray-900 mb-6">1. Introduction</h2>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            <span className="text-5xl font-bold float-left mr-2 leading-none">T</span>
-            he evolution of the blockchain ecosystem has been defined by a transition from monolithic architectures to a modular, pluriversal landscape. As the industry scales, liquidity and state have become fragmented across a sprawling archipelago of Layer 1 blockchains, Layer 2 rollups, and application-specific chains. Interoperability has become the central existential challenge for the decentralized web.
-          </p>
-
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            This report investigates the current state of blockchain interoperability through a bifurcation into two primary root nodes: <strong>Fast Interoperability</strong>, driven by intents and solvers, and <strong>Slow Interoperability</strong>, the foundational transport and verification layer.
-          </p>
-
-          <DefinitionBox title="Intent">
-            An <strong>Intent</strong> is a signed message declaring a desired outcome rather than an execution path. Instead of "Call Contract A, Bridge to Chain B, Swap on DEX C," an intent states: "I have 100 USDC on Optimism and require 100 USDC on Arbitrum."
-          </DefinitionBox>
-
-          <DefinitionBox title="Solver">
-            A <strong>Solver</strong> is a third-party agent—often a sophisticated market maker—that processes user intents for a fee. Solvers operate off-chain, observing mempools and competing to fulfill intents.
-          </DefinitionBox>
-
-          <CalloutBox>
-            A prevailing 2025 pattern: Fast interop layers provide immediate liquidity via solvers, who then use slow interop protocols to rebalance inventory and settle net flows between chains.
-          </CalloutBox>
+        <section id="introduction">
+            <h2>1. Introduction</h2>
+            <p>The evolution of the decentralized finance (DeFi) ecosystem has reached a critical inflection point...</p>
         </section>
 
-        <section id="fast-interop" className="mb-16">
-          <h2 className="text-3xl font-serif font-semibold text-gray-900 mb-6">2. Fast Interoperability</h2>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            Fast interoperability demand arises from canonical bridging friction. Native bridges, particularly for Optimistic Rollups, impose withdrawal delays of up to seven days.
-          </p>
+        <section id="paradigm-shift">
+            <h2>2. The Paradigm Shift</h2>
+            <h3>2.1 The Obsolescence of Lock-and-Mint</h3>
+            <p>To understand the significance of the current generation of bridges...</p>
+            </section>
 
-          <h3 className="text-2xl font-serif font-semibold text-gray-900 mt-10 mb-4">DLN (deBridge Liquidity Network)</h3>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            DLN operates on a peer-to-peer liquidity network with a <strong>0-TVL design</strong>: takers provide liquidity on-demand rather than locking capital in pools. This represents a fundamental shift in capital efficiency.
-          </p>
-
-          <div className="grid grid-cols-3 gap-4 my-8">
-            <StatBox value="12%" label="Market share gain vs Wormhole" />
-            <StatBox value="1-2s" label="Settlement time" />
-            <StatBox value="0 TVL" label="On-demand model" />
-          </div>
-
-          <h3 className="text-2xl font-serif font-semibold text-gray-900 mt-10 mb-4">Aori/LayerZero Fast Swaps</h3>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            <strong>Aori</strong> enables scalable cross-chain intents via "Fast Swaps" on Stargate Finance. The hybrid model combines off-chain matching with on-chain settlement through LayerZero messaging.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 my-8">
-            <div className="bg-yellow-50 rounded-lg p-5 border border-yellow-200">
-              <h5 className="font-semibold text-gray-900 mb-2">Off-Chain Matching</h5>
-              <p className="text-sm text-gray-700">Sub-second execution with no slippage or front-running.</p>
-            </div>
-            <div className="bg-yellow-50 rounded-lg p-5 border border-yellow-200">
-              <h5 className="font-semibold text-gray-900 mb-2">Batch Settlement</h5>
-              <p className="text-sm text-gray-700">Multiple fills batched into single LayerZero messages.</p>
-            </div>
-          </div>
-
-          <CalloutBox>
-            Batch settlement enables <strong>high-frequency cross-chain trading</strong>—previously impossible with traditional bridge-per-transfer models.
-          </CalloutBox>
-        </section>
-
-        <section id="slow-interop" className="mb-16">
-          <h2 className="text-3xl font-serif font-semibold text-gray-900 mb-6">3. Slow Interoperability</h2>
-          
-          <h3 className="text-2xl font-serif font-semibold text-gray-900 mt-10 mb-4">LayerZero V2 & Stargate</h3>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            LayerZero V2 introduced the <strong>Decentralized Verifier Network (DVN)</strong>. <strong>Stargate</strong> is the premier liquidity protocol built on LayerZero with unified liquidity pools solving the "bridging trilemma."
-          </p>
-
-          <div className="grid grid-cols-3 gap-4 my-8">
-            <StatBox value="$48.23B" label="Cumulative volume" />
-            <StatBox value="80+" label="Networks" />
-            <StatBox value="$200-345M" label="Current TVL" />
-          </div>
-
-          <div className="bg-white border border-yellow-200 rounded-lg p-6 my-8">
-            <h4 className="text-center font-semibold text-gray-900 mb-4">Stargate Bridge Volume Over Time</h4>
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={stargateTimeData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e5d5" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tickFormatter={(v) => `$${v}B`} tick={{ fontSize: 11 }} />
-                <Tooltip formatter={(v) => [`$${v}B`, 'Volume']} />
-                <Line type="monotone" dataKey="volume" stroke="#1a1a1a" strokeWidth={2} dot={{ fill: '#1a1a1a', r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            <strong>Stargate V2</strong> features Transaction Batching ("Bus" mode) for 90%+ cost reduction, Hydra for Bridging-as-a-Service, and the AI-Driven Planning Module (AIPM). In August 2025, LayerZero acquired Stargate in a $110M token-swap merger.
-          </p>
-        </section>
-
-        <section id="data" className="mb-16">
-          <h2 className="text-3xl font-serif font-semibold text-gray-900 mb-6">7. Market Data</h2>
-          
-          <div className="bg-white border border-yellow-200 rounded-lg p-6 my-8">
-            <h4 className="text-center font-semibold text-gray-900 mb-4">Bridge Volume by Protocol (Billions USD)</h4>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={bridgeVolumeData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e5d5" />
-                <XAxis type="number" tickFormatter={(v) => `$${v}B`} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={70} />
-                <Tooltip formatter={(v) => [`$${v}B`, 'Volume']} />
-                <Bar dataKey="volume" fill="#1a1a1a" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white border border-yellow-200 rounded-lg p-6 my-8">
-            <h4 className="text-center font-semibold text-gray-900 mb-4">TVL by Protocol (Millions USD)</h4>
-            <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={tvlData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e5d5" />
-                <XAxis type="number" tickFormatter={(v) => `$${v}M`} tick={{ fontSize: 11 }} />
-                <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={85} />
-                <Tooltip formatter={(v) => [`$${v}M`, 'TVL']} />
-                <Bar dataKey="tvl" fill="#4a4a4a" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="bg-white border border-yellow-200 rounded-lg p-6 my-8">
-            <h4 className="text-center font-semibold text-gray-900 mb-4">Cross-Chain Stablecoin Distribution</h4>
-            <ResponsiveContainer width="100%" height={260}>
-              <PieChart>
-                <Pie
-                  data={stablecoinData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={95}
-                  paddingAngle={2}
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  labelLine={false}
-                >
-                  {stablecoinData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(v) => [`$${v}B`, '']} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </section>
-
-        <section id="conclusion" className="mb-16">
-          <h2 className="text-3xl font-serif font-semibold text-gray-900 mb-6">8. Conclusion</h2>
-          
-          <p className="text-gray-800 leading-relaxed mb-4 text-justify">
-            The crypto interoperability landscape has matured significantly. The <strong>Capital Layer</strong> (Fast Interop) is decoupling from the <strong>Data Layer</strong> (Slow Interop). Solvers have emerged as the new power brokers.
-          </p>
-
-          <CalloutBox>
-            The future is <strong>Chain Abstracted</strong>. Users will interact with applications via Credible Accounts, unaware of the complex mesh of Solvers, ZK-proofs, TEEs, and messaging layers stitching the fragmented ledger into a cohesive whole.
-          </CalloutBox>
-
-          <div className="overflow-x-auto my-8">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Summary Table</h3>
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-gray-900 text-yellow-50">
-                  <th className="p-3 text-left font-semibold">Category</th>
-                  <th className="p-3 text-left font-semibold">Mechanism</th>
-                  <th className="p-3 text-left font-semibold">Key Players</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-yellow-200">
-                  <td className="p-3 font-medium">Fast Interop</td>
-                  <td className="p-3">Intents & Solvers</td>
-                  <td className="p-3">Across, Mayan, Relay, DLN, Aori</td>
-                </tr>
-                <tr className="border-b border-yellow-200 bg-yellow-50/30">
-                  <td className="p-3 font-medium">Resource Locks</td>
-                  <td className="p-3">ERC-6909 / Credible Accounts</td>
-                  <td className="p-3">The Compact, One Balance</td>
-                </tr>
-                <tr className="border-b border-yellow-200">
-                  <td className="p-3 font-medium">Slow Interop</td>
-                  <td className="p-3">Verification / Consensus</td>
-                  <td className="p-3">LayerZero, Wormhole, Axelar, IBC, Stargate</td>
-                </tr>
-                <tr className="bg-yellow-50/30">
-                  <td className="p-3 font-medium">Standards</td>
-                  <td className="p-3">Token / Intent Specs</td>
-                  <td className="p-3">ERC-7683 (OIF), xERC20, OFT</td>
-                </tr>
-              </tbody>
+        <section id="debridge-dln">
+            <h2>3. Deep Dive: DeBridge DLN</h2>
+            <p>Among the intent-based protocols, DeBridge has emerged as a technical leader...</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Traditional AMM Bridge</th>
+                        <th>DeBridge DLN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Liquidity Source</strong></td>
+                        <td>Passive LPs (Pools)</td>
+                        <td>Active Solvers (Makers)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Pricing</strong></td>
+                        <td>Bonding Curve</td>
+                        <td>Order Book Spread</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Risk Profile</strong></td>
+                        <td>Custodial Honeypot</td>
+                        <td>0-TVL / Solver Risk</td>
+                    </tr>
+                </tbody>
             </table>
-          </div>
         </section>
 
-        <footer className="pt-12 border-t-2 border-yellow-200 text-center">
-          <p className="text-sm text-gray-600 mb-2">Data Sources: DeFiLlama, Stargate Finance, LayerZero, deBridge, Across Protocol</p>
-          <p className="text-xs text-gray-500">Last Updated: November 2025</p>
-        </footer>
-      </main>
-    </div>
-  );
-}
+        <section id="stargate-v2">
+            <h2>4. Stargate V2: Hybrid Transport</h2>
+            <p>While DeBridge DLN focuses on the pure intent model, Stargate Finance...</p>
+        </section>
+
+        <section id="aori-layerzero">
+            <h2>5. High-Frequency: Aori & LayerZero</h2>
+            <p>While Stargate V2 optimizes for the "retail" and "batching" use cases...</p>
+        </section>
+
+        <section id="quantitative-analysis">
+            <h2>6. Quantitative Analysis</h2>
+            <p>To objectively evaluate the performance of these architectures...</p>
+            </section>
+
+        <section id="future">
+            <h2>7. Future Trajectories</h2>
+            <p>As we look toward late 2025, the concept of a "Bridge" is disappearing...</p>
+        </section>
+
+        <section id="conclusion">
+            <h2>8. Conclusion</h2>
+            <p>The crypto interoperability landscape of 2025 is defined by the triumph of efficiency...</p>
+        </section>
+    </main>
+
+    <aside>
+        <div class="toc-header">Table of Contents</div>
+        <nav>
+            <ul>
+                <li><a href="#introduction">1. Introduction</a></li>
+                <li><a href="#paradigm-shift">2. The Paradigm Shift</a></li>
+                <li><a href="#debridge-dln">3. Deep Dive: DeBridge DLN</a></li>
+                <li><a href="#stargate-v2">4. Stargate V2: Hybrid Transport</a></li>
+                <li><a href="#aori-layerzero">5. High-Frequency: Aori & LayerZero</a></li>
+                <li><a href="#quantitative-analysis">6. Quantitative Analysis</a></li>
+                <li><a href="#future">7. Future Trajectories</a></li>
+                <li><a href="#conclusion">8. Conclusion</a></li>
+            </ul>
+        </nav>
+    </aside>
+</div>
+
+<script>
+    // Navigation Highlighting Logic
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            // Highlight when the section is in the upper third of the viewport
+            if (pageYOffset >= (sectionTop - sectionHeight / 4)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(a => {
+            a.classList.remove('active');
+            if (a.getAttribute('href').includes(current)) {
+                a.classList.add('active');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
